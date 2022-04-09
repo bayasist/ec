@@ -10,7 +10,24 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2022_04_09_020524) do
+ActiveRecord::Schema[7.0].define(version: 2022_04_09_022751) do
+  create_table "cart_items", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
+    t.bigint "cart_id"
+    t.bigint "selling_product_id"
+    t.integer "quantity", default: 0, null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["cart_id"], name: "index_cart_items_on_cart_id"
+    t.index ["selling_product_id"], name: "index_cart_items_on_selling_product_id"
+  end
+
+  create_table "carts", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
+    t.bigint "member_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["member_id"], name: "index_carts_on_member_id"
+  end
+
   create_table "members", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.string "email", default: "", null: false
     t.string "encrypted_password", default: "", null: false

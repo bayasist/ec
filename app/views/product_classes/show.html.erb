@@ -1,6 +1,6 @@
-<%= @product_class.name %>
+<h1><%= @product_class.name %></h1>
 
 <% @product_class.selling_products.each do |product| %>
-  <%= product.name %>
+  <%= product.name %> <%= button_to "カートに入れる", add_cart_path(code: product.code) %>
   <br />
 <% end %>

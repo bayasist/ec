@@ -1,0 +1,3 @@
+<% @cart.cart_items.each do |item| %>
+  <%= item.selling_product.name %> * <%= item.quantity %> <%= button_to "削除", delete_cart_path(code: item.selling_product.code), method: :delete %>
+<% end %>

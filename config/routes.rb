@@ -7,4 +7,8 @@ Rails.application.routes.draw do
 
   resources :product_classes do
   end
+  resource :cart do
+    post "add/:code", to: "carts#add", as: :add
+    delete "delete/:code", to: "carts#delete", as: :delete
+  end
 end
