@@ -10,5 +10,7 @@ Rails.application.routes.draw do
   resource :cart do
     post "add/:code", to: "carts#add", as: :add
     delete "delete/:code", to: "carts#delete", as: :delete
+    get "shipping_and_payment"
+    post "shipping_address"
   end
 end

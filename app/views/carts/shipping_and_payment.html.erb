@@ -1,0 +1,13 @@
+
+<% @cart.cart_items.each do |item| %>
+  <%= item.selling_product.name %> * <%= item.quantity %>
+<% end %>
+
+<%= form_with model: @cart, url: shipping_address_cart_path, method: :post do |f| %>
+  <% @shipping_addresses.each do |shipping_address| %>
+    <%= f.radio_button :shipping_address_id, shipping_address.index, checked: shipping_address.id == @cart.shipping_address.id %>
+    <%= f.label :shipping_address_id, shipping_address.name, value: shipping_address.index %>
+  <% end %>
+  <%= f.submit%>
+<% end %>
+<%= link_to "次へ", shipping_and_payment_cart_path %>

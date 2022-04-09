@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2022_04_09_041922) do
+ActiveRecord::Schema[7.0].define(version: 2022_04_09_122905) do
   create_table "attach_selling_products", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.bigint "selling_product_id", null: false
     t.bigint "product_id", null: false
@@ -36,17 +36,21 @@ ActiveRecord::Schema[7.0].define(version: 2022_04_09_041922) do
     t.bigint "member_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.bigint "shipping_address_id"
     t.index ["member_id"], name: "index_carts_on_member_id"
+    t.index ["shipping_address_id"], name: "index_carts_on_shipping_address_id"
   end
 
   create_table "members", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.string "email", default: "", null: false
     t.string "encrypted_password", default: "", null: false
+    t.bigint "default_shipping_address_id"
     t.string "reset_password_token"
     t.datetime "reset_password_sent_at"
     t.datetime "remember_created_at"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.index ["default_shipping_address_id"], name: "fk_rails_5185efcc8a"
     t.index ["email"], name: "index_members_on_email", unique: true
     t.index ["reset_password_token"], name: "index_members_on_reset_password_token", unique: true
   end
@@ -73,6 +77,21 @@ ActiveRecord::Schema[7.0].define(version: 2022_04_09_041922) do
     t.datetime "updated_at", null: false
     t.index ["code"], name: "index_selling_products_on_code", unique: true
     t.index ["selling_product_class_id"], name: "index_selling_products_on_selling_product_class_id"
+  end
+
+  create_table "shipping_addresses", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
+    t.integer "index", null: false
+    t.bigint "member_id", null: false
+    t.string "name", null: false
+    t.string "postal_code", null: false
+    t.string "prefecture", null: false
+    t.string "city", null: false
+    t.string "address_line", null: false
+    t.string "building_name", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["member_id", "index"], name: "index_shipping_addresses_on_member_id_and_index", unique: true
+    t.index ["member_id"], name: "index_shipping_addresses_on_member_id"
   end
 
   create_table "stock_records", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
@@ -117,4 +136,5 @@ ActiveRecord::Schema[7.0].define(version: 2022_04_09_041922) do
     t.datetime "updated_at", null: false
   end
 
+  add_foreign_key "members", "shipping_addresses", column: "default_shipping_address_id"
 end

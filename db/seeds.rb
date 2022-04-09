@@ -16,4 +16,5 @@ p.name = "b"
 p.save!
 
 
-Member.create!(email: "test@example.com", password: "testtest")
+(member = Member.find_or_initialize_by(email: "test@example.com")).update!(password: "testtest")
+ShippingAddress.create(name: "test", postal_code: "1000001", prefecture: "東京都", city: "千代田区千代田", address_line: "1", building_name: "", member: member)

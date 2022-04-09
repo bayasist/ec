@@ -1,5 +1,6 @@
 class Cart < ApplicationRecord
   has_many :cart_items
+  belongs_to :shipping_address, optional: true
 
   def find_by_product(selling_product)
     cart_items.find { |item| item.selling_product == selling_product }
