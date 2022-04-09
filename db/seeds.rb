@@ -5,3 +5,12 @@
 #
 #   movies = Movie.create([{ name: "Star Wars" }, { name: "Lord of the Rings" }])
 #   Character.create(name: "Luke", movie: movies.first)
+
+pc = SellingProductClass.find_or_initialize_by(code: "a")
+pc.name = "a"
+pc.save!
+
+p = SellingProduct.find_or_initialize_by(code: "c")
+p.selling_product_class = pc
+p.name = "b"
+p.save!
