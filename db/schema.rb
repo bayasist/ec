@@ -10,7 +10,18 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2022_04_09_022751) do
+ActiveRecord::Schema[7.0].define(version: 2022_04_09_041922) do
+  create_table "attach_selling_products", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
+    t.bigint "selling_product_id", null: false
+    t.bigint "product_id", null: false
+    t.integer "quantity", default: 1, null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["product_id"], name: "index_attach_selling_products_on_product_id"
+    t.index ["selling_product_id", "product_id"], name: "attach_selling_products_index", unique: true
+    t.index ["selling_product_id"], name: "index_attach_selling_products_on_selling_product_id"
+  end
+
   create_table "cart_items", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.bigint "cart_id"
     t.bigint "selling_product_id"
@@ -40,6 +51,12 @@ ActiveRecord::Schema[7.0].define(version: 2022_04_09_022751) do
     t.index ["reset_password_token"], name: "index_members_on_reset_password_token", unique: true
   end
 
+  create_table "products", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
+    t.string "name", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
   create_table "selling_product_classes", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.string "name", null: false
     t.string "code", null: false
@@ -56,6 +73,48 @@ ActiveRecord::Schema[7.0].define(version: 2022_04_09_022751) do
     t.datetime "updated_at", null: false
     t.index ["code"], name: "index_selling_products_on_code", unique: true
     t.index ["selling_product_class_id"], name: "index_selling_products_on_selling_product_class_id"
+  end
+
+  create_table "stock_records", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
+    t.bigint "product_id"
+    t.bigint "warehouse_id"
+    t.integer "quantity"
+    t.integer "allowable_quantity"
+    t.integer "process_quantity"
+    t.integer "bad_quantity"
+    t.integer "hold_quantity"
+    t.integer "increase"
+    t.integer "allowable_increase"
+    t.integer "process_increase"
+    t.integer "bad_increase"
+    t.integer "hold_increase"
+    t.string "note"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["product_id"], name: "index_stock_records_on_product_id"
+    t.index ["warehouse_id"], name: "index_stock_records_on_warehouse_id"
+  end
+
+  create_table "stocks", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
+    t.bigint "product_id"
+    t.bigint "warehouse_id"
+    t.integer "quantity"
+    t.integer "allowable_quantity"
+    t.integer "process_quantity"
+    t.integer "bad_quantity"
+    t.integer "hold_quantity"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["product_id", "warehouse_id"], name: "index_stocks_on_product_id_and_warehouse_id", unique: true
+    t.index ["product_id"], name: "index_stocks_on_product_id"
+    t.index ["warehouse_id"], name: "index_stocks_on_warehouse_id"
+  end
+
+  create_table "warehouses", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
+    t.string "name", null: false
+    t.datetime "deleted_at"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
   end
 
 end
