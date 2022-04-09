@@ -14,3 +14,6 @@ p = SellingProduct.find_or_initialize_by(code: "c")
 p.selling_product_class = pc
 p.name = "b"
 p.save!
+
+
+Member.create!(email: "test@example.com", password: "testtest")
