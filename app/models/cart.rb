@@ -9,6 +9,8 @@ class Cart < ApplicationRecord
   def add(selling_product, quantity = 1)
     cart_item = find_by_product(selling_product) || cart_items.build(selling_product: selling_product)
     cart_item.quantity += quantity
+    cart_item.price_with_tax = selling_product.price_with_tax * cart_item.quantity
+    cart_item.price_without_tax = selling_product.price_without_tax * cart_item.quantity
   end
 
   def delete(selling_product)

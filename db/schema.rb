@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2022_04_09_122905) do
+ActiveRecord::Schema[7.0].define(version: 2022_04_10_053753) do
   create_table "attach_selling_products", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.bigint "selling_product_id", null: false
     t.bigint "product_id", null: false
@@ -25,6 +25,8 @@ ActiveRecord::Schema[7.0].define(version: 2022_04_09_122905) do
   create_table "cart_items", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.bigint "cart_id"
     t.bigint "selling_product_id"
+    t.decimal "price_without_tax", precision: 10, scale: 2, null: false
+    t.decimal "price_with_tax", precision: 10, scale: 2, null: false
     t.integer "quantity", default: 0, null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
@@ -72,11 +74,15 @@ ActiveRecord::Schema[7.0].define(version: 2022_04_09_122905) do
   create_table "selling_products", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.bigint "selling_product_class_id", null: false
     t.string "name", null: false
+    t.integer "price", null: false
+    t.bigint "tax_type_id", null: false
+    t.integer "price_type", null: false
     t.string "code", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["code"], name: "index_selling_products_on_code", unique: true
     t.index ["selling_product_class_id"], name: "index_selling_products_on_selling_product_class_id"
+    t.index ["tax_type_id"], name: "index_selling_products_on_tax_type_id"
   end
 
   create_table "shipping_addresses", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
@@ -127,6 +133,22 @@ ActiveRecord::Schema[7.0].define(version: 2022_04_09_122905) do
     t.index ["product_id", "warehouse_id"], name: "index_stocks_on_product_id_and_warehouse_id", unique: true
     t.index ["product_id"], name: "index_stocks_on_product_id"
     t.index ["warehouse_id"], name: "index_stocks_on_warehouse_id"
+  end
+
+  create_table "tax_rates", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
+    t.bigint "tax_type_id", null: false
+    t.date "begin_at", null: false
+    t.date "end_at"
+    t.decimal "rate", precision: 10, null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["tax_type_id"], name: "index_tax_rates_on_tax_type_id"
+  end
+
+  create_table "tax_types", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
+    t.string "name", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
   end
 
   create_table "warehouses", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
