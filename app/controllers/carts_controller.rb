@@ -39,7 +39,7 @@ class CartsController < ApplicationController
   private
 
   def set_cart
-    @cart = Cart.find_or_initialize_by(member_id: current_member.id)
+    @cart = Cart.find_or_initialize_by(member_id: current_member.id, purchase_id: nil)
   end
 
   def set_product

@@ -13,4 +13,10 @@ Rails.application.routes.draw do
     get "shipping_and_payment"
     post "shipping_address"
   end
+
+  resources :purchases do
+    member do
+      get "finish"
+    end
+  end
 end

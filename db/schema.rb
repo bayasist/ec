@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2022_04_10_053753) do
+ActiveRecord::Schema[7.0].define(version: 2022_04_14_145225) do
   create_table "attach_selling_products", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.bigint "selling_product_id", null: false
     t.bigint "product_id", null: false
@@ -39,7 +39,9 @@ ActiveRecord::Schema[7.0].define(version: 2022_04_10_053753) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.bigint "shipping_address_id"
+    t.bigint "purchase_id"
     t.index ["member_id"], name: "index_carts_on_member_id"
+    t.index ["purchase_id"], name: "index_carts_on_purchase_id"
     t.index ["shipping_address_id"], name: "index_carts_on_shipping_address_id"
   end
 
@@ -61,6 +63,52 @@ ActiveRecord::Schema[7.0].define(version: 2022_04_10_053753) do
     t.string "name", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+  end
+
+  create_table "purchase_payments", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
+    t.bigint "purchase_id", null: false
+    t.integer "total_price", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["purchase_id"], name: "index_purchase_payments_on_purchase_id"
+  end
+
+  create_table "purchase_products", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
+    t.bigint "selling_product_id", null: false
+    t.bigint "purchase_id"
+    t.string "product_name"
+    t.decimal "price_with_tax", precision: 10, scale: 2, null: false
+    t.decimal "price_without_tax", precision: 10, scale: 2, null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["purchase_id"], name: "index_purchase_products_on_purchase_id"
+    t.index ["selling_product_id"], name: "index_purchase_products_on_selling_product_id"
+  end
+
+  create_table "purchase_shipping_addresses", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
+    t.bigint "purchase_id", null: false
+    t.bigint "shipping_address_id", null: false
+    t.string "name"
+    t.string "prefecture"
+    t.string "city"
+    t.string "address_line"
+    t.string "building_name"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["purchase_id"], name: "index_purchase_shipping_addresses_on_purchase_id"
+    t.index ["shipping_address_id"], name: "index_purchase_shipping_addresses_on_shipping_address_id"
+  end
+
+  create_table "purchases", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
+    t.bigint "member_id", null: false
+    t.string "code", null: false
+    t.datetime "sold_at", null: false
+    t.integer "price_with_tax"
+    t.integer "price_without_tax"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["code"], name: "index_purchases_on_code"
+    t.index ["member_id"], name: "index_purchases_on_member_id"
   end
 
   create_table "selling_product_classes", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|

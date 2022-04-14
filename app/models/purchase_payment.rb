@@ -1,0 +1,2 @@
+class PurchasePayment < ApplicationRecord
+end
