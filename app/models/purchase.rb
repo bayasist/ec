@@ -31,4 +31,8 @@ class Purchase < ApplicationRecord
   def self.generate_order_code
     rand(1000000...10000000).to_s
   end
+
+  def reserve_stock!
+    purchase_products.each(&:reserve_stock!)
+  end
 end

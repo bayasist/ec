@@ -1,6 +1,10 @@
 class PurchasesController < ApplicationController
   def create
-    purchase = Cart.find_by!(member_id: current_member.id, purchase_id: nil).create_purchase!
+    purchase = nil
+    ActiveRecord::Base.transaction do
+      purchase = Cart.find_by!(member_id: current_member.id, purchase_id: nil).create_purchase!
+      purchase.reserve_stock!
+    end
     redirect_to finish_purchase_path(id: purchase.code)
   end
 

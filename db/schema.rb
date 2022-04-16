@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2022_04_14_145225) do
+ActiveRecord::Schema[7.0].define(version: 2022_04_16_042210) do
   create_table "attach_selling_products", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.bigint "selling_product_id", null: false
     t.bigint "product_id", null: false
@@ -164,18 +164,20 @@ ActiveRecord::Schema[7.0].define(version: 2022_04_14_145225) do
     t.string "note"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.bigint "purchase_product_id"
     t.index ["product_id"], name: "index_stock_records_on_product_id"
+    t.index ["purchase_product_id"], name: "index_stock_records_on_purchase_product_id"
     t.index ["warehouse_id"], name: "index_stock_records_on_warehouse_id"
   end
 
   create_table "stocks", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
-    t.bigint "product_id"
-    t.bigint "warehouse_id"
-    t.integer "quantity"
-    t.integer "allowable_quantity"
-    t.integer "process_quantity"
-    t.integer "bad_quantity"
-    t.integer "hold_quantity"
+    t.bigint "product_id", null: false
+    t.bigint "warehouse_id", null: false
+    t.integer "quantity", null: false
+    t.integer "allowable_quantity", null: false
+    t.integer "process_quantity", null: false
+    t.integer "bad_quantity", null: false
+    t.integer "hold_quantity", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["product_id", "warehouse_id"], name: "index_stocks_on_product_id_and_warehouse_id", unique: true

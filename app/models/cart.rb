@@ -28,11 +28,9 @@ class Cart < ApplicationRecord
   end
 
   def create_purchase!
-    ActiveRecord::Base.transaction do
-      purchase = Purchase.initialize_by_cart(self)
-      purchase.save!
-      done!(purchase)
-    end
+    purchase = Purchase.initialize_by_cart(self)
+    purchase.save!
+    done!(purchase)
     purchase
   end
 

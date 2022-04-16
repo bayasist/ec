@@ -22,6 +22,16 @@ TaxRate.create!(tax_type: normal_tax, rate: 5, begin_at: Date.new(1997, 4, 1), e
 TaxRate.create!(tax_type: normal_tax, rate: 8, begin_at: Date.new(2014, 4, 1), end_at: Date.new(2019, 9, 30))
 TaxRate.create!(tax_type: normal_tax, rate: 10, begin_at: Date.new(2019, 10, 1))
 
+Warehouse.find_or_create_by!(name: "a")
+AttachSellingProduct.where(product_id: 1).destroy_all
+Product.find_by(id: 1)&.delete
+rp = Product.find_or_initialize_by(id: 1)
+rp.name = "a"
+rp.save!
+
+rp.stocks.each do |stock|
+  stock.arrive!(1, {})
+end
 
 pc = SellingProductClass.find_or_initialize_by(code: "a")
 pc.name = "a"
@@ -34,6 +44,8 @@ p.price = 100
 p.tax_type = normal_tax
 p.price_type = "tax_inclusive_pricing"
 p.save!
+AttachSellingProduct.create!(product: rp, selling_product: p, quantity: 1)
+
 
 
 (member = Member.find_or_initialize_by(email: "test@example.com")).update!(password: "testtest")
