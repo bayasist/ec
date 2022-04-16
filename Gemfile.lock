@@ -95,6 +95,10 @@ GEM
       warden (~> 1.2.3)
     diff-lcs (1.5.0)
     digest (3.1.0)
+    dotenv (2.7.6)
+    dotenv-rails (2.7.6)
+      dotenv (= 2.7.6)
+      railties (>= 3.2)
     erubi (1.10.0)
     factory_bot (6.2.1)
       activesupport (>= 5.0.0)
@@ -212,6 +216,7 @@ GEM
       sprockets (>= 3.0.0)
     stimulus-rails (1.0.4)
       railties (>= 6.0.0)
+    stripe (5.50.0)
     strscan (3.0.1)
     thor (1.2.1)
     timeout (0.2.0)
@@ -242,6 +247,7 @@ DEPENDENCIES
   capybara (>= 2.15)
   debug
   devise
+  dotenv-rails
   factory_bot_rails
   faker
   importmap-rails
@@ -252,6 +258,7 @@ DEPENDENCIES
   rspec-rails
   sprockets-rails
   stimulus-rails
+  stripe
   turbo-rails
   tzinfo-data
   web-console

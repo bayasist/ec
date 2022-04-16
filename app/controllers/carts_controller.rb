@@ -24,8 +24,12 @@ class CartsController < ApplicationController
     end
 
     @shipping_addresses = current_member.shipping_addresses
+    @payment_methods = current_member.payment_methods
     if @cart.shipping_address.blank?
       @cart.shipping_address = current_member.default_shipping_address || @shipping_addresses.first
+    end
+    if @cart.payment_method.blank?
+      @cart.payment_method = current_member.default_payment_method || @payment_methods.first
     end
   end
 
@@ -33,6 +37,13 @@ class CartsController < ApplicationController
     shipping_address = ShippingAddress.find_by!(member: current_member.id, index: shipping_address_params[:shipping_address_id])
     @cart.update!(shipping_address: shipping_address)
     current_member.update(default_shipping_address: shipping_address)
+    redirect_to shipping_and_payment_cart_path
+  end
+
+  def payment_method
+    payment_method = PaymentMethod.find_by!(member: current_member.id, index: payment_method_params[:payment_method_id])
+    @cart.update!(payment_method: payment_method)
+    current_member.update(default_payment_method: payment_method)
     redirect_to shipping_and_payment_cart_path
   end
 
@@ -48,5 +59,9 @@ class CartsController < ApplicationController
 
   def shipping_address_params
     params.require(:cart).permit(:shipping_address_id)
+  end
+
+  def payment_method_params
+    params.require(:cart).permit(:payment_method_id)
   end
 end

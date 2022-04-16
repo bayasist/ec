@@ -2,6 +2,7 @@ class Cart < ApplicationRecord
   has_many :cart_items
   belongs_to :member
   belongs_to :shipping_address, optional: true
+  belongs_to :payment_method, optional: true
   belongs_to :purchase, optional: true
 
   scope :non_buy, -> { where(purchase_id: nil) }

@@ -7,6 +7,6 @@ class ShippingAddress < ApplicationRecord
 
   def add_index
     return if index.present?
-    self.index = (ShippingAddress.where(member_id: member.id).pluck(:index).max || 0) + 1
+    self.index = (self.class.where(member_id: member.id).pluck(:index).max || 0) + 1
   end
 end

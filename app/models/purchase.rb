@@ -7,7 +7,7 @@ class Purchase < ApplicationRecord
     result = Purchase.new(sold_at: Time.zone.now, code: generate_order_code, member_id: cart.member_id)
     result.price_with_tax = cart.price_with_tax
     result.price_without_tax = cart.price_without_tax
-    result.purchase_payment = PurchasePayment.new(total_price: cart.price_with_tax)
+    result.purchase_payment = PurchasePayment.new(total_price: cart.price_with_tax, payment_method: cart.payment_method || cart.member.default_payment_method)
     shipping_address = cart.shipping_address || cart.member.default_shipping_address
     result.purchase_shipping_address = PurchaseShippingAddress.new(
       shipping_address_id: shipping_address.id,
@@ -34,5 +34,9 @@ class Purchase < ApplicationRecord
 
   def reserve_stock!
     purchase_products.each(&:reserve_stock!)
+  end
+
+  def payment!
+    purchase_payment.payment!
   end
 end

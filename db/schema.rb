@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2022_04_16_042210) do
+ActiveRecord::Schema[7.0].define(version: 2022_04_16_083736) do
   create_table "attach_selling_products", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.bigint "selling_product_id", null: false
     t.bigint "product_id", null: false
@@ -40,7 +40,9 @@ ActiveRecord::Schema[7.0].define(version: 2022_04_16_042210) do
     t.datetime "updated_at", null: false
     t.bigint "shipping_address_id"
     t.bigint "purchase_id"
+    t.bigint "payment_method_id"
     t.index ["member_id"], name: "index_carts_on_member_id"
+    t.index ["payment_method_id"], name: "index_carts_on_payment_method_id"
     t.index ["purchase_id"], name: "index_carts_on_purchase_id"
     t.index ["shipping_address_id"], name: "index_carts_on_shipping_address_id"
   end
@@ -48,15 +50,28 @@ ActiveRecord::Schema[7.0].define(version: 2022_04_16_042210) do
   create_table "members", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.string "email", default: "", null: false
     t.string "encrypted_password", default: "", null: false
+    t.bigint "default_payment_method_id"
     t.bigint "default_shipping_address_id"
     t.string "reset_password_token"
     t.datetime "reset_password_sent_at"
     t.datetime "remember_created_at"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.string "stripe_customer_id"
+    t.index ["default_payment_method_id"], name: "fk_rails_df9754084a"
     t.index ["default_shipping_address_id"], name: "fk_rails_5185efcc8a"
     t.index ["email"], name: "index_members_on_email", unique: true
     t.index ["reset_password_token"], name: "index_members_on_reset_password_token", unique: true
+  end
+
+  create_table "payment_methods", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
+    t.integer "index", null: false
+    t.bigint "member_id", null: false
+    t.string "stripe_paymen_method_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["member_id", "index"], name: "index_payment_methods_on_member_id_and_index", unique: true
+    t.index ["member_id"], name: "index_payment_methods_on_member_id"
   end
 
   create_table "products", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
@@ -68,8 +83,11 @@ ActiveRecord::Schema[7.0].define(version: 2022_04_16_042210) do
   create_table "purchase_payments", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.bigint "purchase_id", null: false
     t.integer "total_price", null: false
+    t.bigint "payment_method_id", null: false
+    t.string "stripe_payment_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.index ["payment_method_id"], name: "index_purchase_payments_on_payment_method_id"
     t.index ["purchase_id"], name: "index_purchase_payments_on_purchase_id"
   end
 
@@ -208,5 +226,6 @@ ActiveRecord::Schema[7.0].define(version: 2022_04_16_042210) do
     t.datetime "updated_at", null: false
   end
 
+  add_foreign_key "members", "payment_methods", column: "default_payment_method_id"
   add_foreign_key "members", "shipping_addresses", column: "default_shipping_address_id"
 end

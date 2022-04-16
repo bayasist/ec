@@ -11,5 +11,56 @@
   <%= f.submit%>
 <% end %>
 
+<%= form_with model: @cart, url: payment_method_cart_path, method: :post do |f| %>
+  <% @payment_methods.each do |payment_method| %>
+    <%= f.radio_button :payment_method_id, payment_method.index, checked: payment_method.id == @cart.payment_method.id %>
+    <%= f.label :payment_method_id, payment_method.mask_card_no, value: payment_method.index %>
+  <% end %>
+  <%= f.submit%>
+<% end %>
+
+<script src="https://js.stripe.com/v3/"></script>
+<input id="cardholder-name" type="text">
+<!-- placeholder for Elements -->
+<div id="card-element"></div>
+<div id="card-result"></div>
+<button id="card-button">Save Card</button>
+<%= form_with url: mypage_payment_methods_path, model: PaymentMethod.new, id: "js-payment_method_form" do |f| %>
+  <%= f.hidden_field :stripe_paymen_method_id %>
+  <%= f.submit %>
+<% end %>
+<script>
+  var stripe = Stripe('<%= ENV['STRIPE_PUBLIC_KEY'] %>');
+
+  var elements = stripe.elements();
+  var cardElement = elements.create('card');
+  cardElement.mount('#card-element');
+</script>
+<script>
+  var cardholderName = document.getElementById('cardholder-name');
+  var cardButton = document.getElementById('card-button');
+  var resultContainer = document.getElementById('card-result');
+
+  cardButton.addEventListener('click', function(ev) {
+
+    stripe.createPaymentMethod({
+        type: 'card',
+        card: cardElement,
+        billing_details: {
+          name: cardholderName.value,
+        },
+      }
+    ).then(function(result) {
+      if (result.error) {
+        // Display error.message in your UI
+        resultContainer.textContent = result.error.message;
+      } else {
+        // You have successfully created a new PaymentMethod
+        document.getElementById('payment_method_stripe_paymen_method_id').value = result.paymentMethod.id;
+        document.getElementById('js-payment_method_form').submit();
+      }
+    });
+  });
+</script>
 
 <%= button_to "次へ", purchases_path%>

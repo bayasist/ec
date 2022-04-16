@@ -12,11 +12,16 @@ Rails.application.routes.draw do
     delete "delete/:code", to: "carts#delete", as: :delete
     get "shipping_and_payment"
     post "shipping_address"
+    post "payment_method"
   end
 
   resources :purchases do
     member do
       get "finish"
     end
+  end
+
+  namespace :mypage do
+    resources :payment_methods
   end
 end
