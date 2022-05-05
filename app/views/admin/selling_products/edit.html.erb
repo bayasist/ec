@@ -1,0 +1,74 @@
+a
+
+<%= form_with model: @product, url: admin_selling_product_path(@product.id), method: :put do |f| %>
+  <table>
+    <tbody>
+      <tr>
+        <th>
+          商品名
+        </th>
+        <td>
+          <%= f.text_field :name %>
+        </td>
+      </tr>
+      <tr>
+        <th>
+          商品コード
+        </th>
+        <td>
+          <%= f.text_field :code %>
+        </td>
+      </tr>
+    </tbody>
+    <%= fields_for :selling_products do |selling_product_f| %>
+      <tbody>
+        <tr>
+          <th colspan="2">
+            <hr />
+          </th>
+        </tr>
+        <tr>
+          <th>
+            商品名
+          </th>
+          <td>
+            <%= selling_product_f.text_field :name %>
+          </td>
+        </tr>
+        <tr>
+          <th>
+            商品コード
+          </th>
+          <td>
+            <%= selling_product_f.text_field :code %>
+          </td>
+        </tr>
+        <tr>
+          <th>
+            価格
+          </th>
+          <td>
+            <%= selling_product_f.text_field :price %>
+          </td>
+        </tr>
+        <tr>
+          <th>
+            消費税タイプ
+          </th>
+          <td>
+            TODO
+          </td>
+        </tr>
+        <tr>
+          <th>
+            価格タイプ
+          </th>
+          <td>
+            TODO
+          </td>
+        </tr>
+      </tbody>
+    <% end %>
+  </table>
+  <%= f.submit %>
+<% end %>

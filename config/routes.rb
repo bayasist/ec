@@ -34,5 +34,7 @@ Rails.application.routes.draw do
         get "sign_out"
       end
     end
+    resources :selling_products do
+    end
   end
 end
