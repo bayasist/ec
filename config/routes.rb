@@ -24,4 +24,15 @@ Rails.application.routes.draw do
   namespace :mypage do
     resources :payment_methods
   end
+
+  namespace :admin do
+    get "/", to: "home#index"
+    resources :admin_users do
+      collection do
+        get "sign_in"
+        post "sign_in"
+        get "sign_out"
+      end
+    end
+  end
 end

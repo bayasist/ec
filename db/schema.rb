@@ -10,7 +10,20 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2022_04_16_083736) do
+ActiveRecord::Schema[7.0].define(version: 2022_05_04_011105) do
+  create_table "admin_users", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
+    t.string "user_name"
+    t.string "password_hash"
+    t.string "password_solt"
+    t.string "session_id"
+    t.datetime "expired_at"
+    t.datetime "deleted_at"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["session_id"], name: "index_admin_users_on_session_id", unique: true
+    t.index ["user_name"], name: "index_admin_users_on_user_name", unique: true
+  end
+
   create_table "attach_selling_products", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.bigint "selling_product_id", null: false
     t.bigint "product_id", null: false
