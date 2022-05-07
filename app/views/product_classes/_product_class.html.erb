@@ -1,0 +1,6 @@
+<div>
+  <%= link_to product_class_path(id: product_class.code) do %>
+    <%= product_class.name %><br />
+    <%= display_price(product_class.price_with_tax_range, "%s円～%s円", "%s円") %>
+  <% end %>
+</div>
