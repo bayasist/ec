@@ -1,6 +1,8 @@
 class AdminUser < ApplicationRecord
   scope :signed_in_users, -> { where("expired_at >= NOW()").available }
   scope :available, -> { where(deleted_at: nil) }
+  before_save :set_password_hash
+  attr_accessor :password
 
   def validate_password?(password)
     return false unless available?
@@ -46,16 +48,6 @@ class AdminUser < ApplicationRecord
     (result&.validate_password?(password) || nil) && result
   end
 
-  def self.create!(**hash)
-    if hash.key?(:password)
-      password = hash.delete(:password)
-      solt = SecureRandom.uuid
-      hash[:password_solt] = solt
-      hash[:password_hash] = hash_password(password, solt)
-    end
-    super(hash)
-  end
-
   def self.create(**hash)
     create!(hash)
     true
@@ -65,5 +57,13 @@ class AdminUser < ApplicationRecord
 
   def self.hash_password(password, solt)
     Digest::SHA256.hexdigest(solt + "#" + password)
+  end
+
+  private
+
+  def set_password_hash
+    solt = password.present? && SecureRandom.uuid
+    self.password_solt = solt
+    self.password_hash = solt && self.class.hash_password(password, solt)
   end
 end

@@ -4,6 +4,9 @@ class SellingProduct < ApplicationRecord
 
   enum price_type: { tax_inclusive_pricing: 1, tax_exclusive_pricing: 2 }
   belongs_to :tax_type
+  validates :price, presence: true
+  validates :price_type, presence: true
+  validates :code, uniqueness: true
 
   # 残り在庫数を返す
   # @return [Integer, nil] 在庫管理しなくてもよいものはnilを返却する

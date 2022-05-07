@@ -1,7 +1,5 @@
-a
-
 <%= form_with model: @product, url: admin_selling_product_path(@product.id), method: :put do |f| %>
-  <table>
+  <table id="detail-association-insertion-point">
     <tbody>
       <tr>
         <th>
@@ -20,55 +18,39 @@ a
         </td>
       </tr>
     </tbody>
-    <%= fields_for :selling_products do |selling_product_f| %>
-      <tbody>
-        <tr>
-          <th colspan="2">
-            <hr />
-          </th>
-        </tr>
-        <tr>
-          <th>
-            商品名
-          </th>
-          <td>
-            <%= selling_product_f.text_field :name %>
-          </td>
-        </tr>
-        <tr>
-          <th>
-            商品コード
-          </th>
-          <td>
-            <%= selling_product_f.text_field :code %>
-          </td>
-        </tr>
-        <tr>
-          <th>
-            価格
-          </th>
-          <td>
-            <%= selling_product_f.text_field :price %>
-          </td>
-        </tr>
-        <tr>
-          <th>
-            消費税タイプ
-          </th>
-          <td>
-            TODO
-          </td>
-        </tr>
-        <tr>
-          <th>
-            価格タイプ
-          </th>
-          <td>
-            TODO
-          </td>
-        </tr>
-      </tbody>
+    <%= f.fields_for :selling_products do |selling_product_f| %>
+      <%= render 'selling_product_fields', f: selling_product_f %>
     <% end %>
   </table>
   <%= f.submit %>
 <% end %>
+<%= button_to '追加' , '#', id: 'js-add-selling-product' %>
+<script>
+  document.getElementById("js-add-selling-product").addEventListener("click", (e) => {
+    e.preventDefault();
+    var parent = document.querySelector("#detail-association-insertion-point");
+    var strhtml = "<%== (render 'selling_product_fields', f: instantiate_builder("selling_product_class[selling_products_attributes][new_selling_products]", SellingProduct.new, {})).gsub(/\R/, "\\n").gsub(/\"/, "\\\"") %>"
+    parent.innerHTML += strhtml;
+
+    var newElements = parent.querySelectorAll("[name^=selling_product_class\\[selling_products_attributes\\]\\[new_selling_products\\]]");
+    var index = maxCount() + 1;
+    for(var i = 0; i < newElements.length; i++) {
+      newElements[i].name = newElements[i].name.replace("new_selling_products", index);
+    }
+  });
+
+  var maxCount = (object_name, attribute_name) => {
+    var items = document.getElementById("detail-association-insertion-point").closest("form").elements;
+    var keys = [];
+    for(var o in items) { items[o].name && keys.push(items[o].name) };
+    var maxCount = 0;
+    for(var o in keys) {
+      var m = keys[o].match(/^selling_product_class\[selling_products_attributes\]\[(\d+)\].+$/);
+      if(m) {
+        var count = parseInt(m[1]);
+        if(count > maxCount) maxCount = count;
+      }
+    }
+    return count;
+  }
+</script>

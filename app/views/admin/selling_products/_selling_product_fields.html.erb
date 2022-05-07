@@ -1,0 +1,49 @@
+
+<tbody>
+  <tr>
+    <th colspan="2">
+      <hr />
+      <%= f.hidden_field :id %>
+    </th>
+  </tr>
+  <tr>
+    <th>
+      商品名
+    </th>
+    <td>
+      <%= f.text_field :name %>
+    </td>
+  </tr>
+  <tr>
+    <th>
+      商品コード
+    </th>
+    <td>
+      <%= f.text_field :code %>
+    </td>
+  </tr>
+  <tr>
+    <th>
+      価格
+    </th>
+    <td>
+      <%= f.text_field :price %>
+    </td>
+  </tr>
+  <tr>
+    <th>
+      消費税タイプ
+    </th>
+    <td>
+      <%= f.collection_select :tax_type_id, TaxType.all, :id, :name %>
+    </td>
+  </tr>
+  <tr>
+    <th>
+      価格タイプ
+    </th>
+    <td>
+      <%= f.select :price_type, [['内税', :tax_inclusive_pricing], ['外税', :tax_exclusive_pricing]], { include_blank: true }%>
+    </td>
+  </tr>
+</tbody>

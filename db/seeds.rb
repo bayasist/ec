@@ -6,11 +6,14 @@
 #   movies = Movie.create([{ name: "Star Wars" }, { name: "Lord of the Rings" }])
 #   Character.create(name: "Luke", movie: movies.first)
 
+
+TaxRate.destroy_all
+TaxType.destroy_all
+
 food_tax = TaxType.create!(name: "食料品")
 normal_tax = TaxType.create!(name: "食料品以外")
 zero_tax = TaxType.create!(name: "非課税品")
 
-TaxRate.destroy_all
 TaxRate.create!(tax_type: zero_tax, rate: 0, begin_at: Date.new(1900, 1, 1))
 TaxRate.create!(tax_type: food_tax, rate: 0, begin_at: Date.new(1900, 1, 1), end_at: Date.new(1989, 3, 31))
 TaxRate.create!(tax_type: food_tax, rate: 3, begin_at: Date.new(1989, 4, 1), end_at: Date.new(1997, 3, 31))
@@ -50,3 +53,5 @@ AttachSellingProduct.create!(product: rp, selling_product: p, quantity: 1)
 
 (member = Member.find_or_initialize_by(email: "test@example.com")).update!(password: "testtest")
 ShippingAddress.create(name: "test", postal_code: "1000001", prefecture: "東京都", city: "千代田区千代田", address_line: "1", building_name: "", member: member)
+
+admin_user = AdminUser.find_or_initialize_by(user_name: "test@example.com").update!(password: "testtest")
